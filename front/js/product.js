@@ -93,4 +93,4 @@ const cartButton = document.getElementById("addToCart")
           
         };
     });
-;
+
