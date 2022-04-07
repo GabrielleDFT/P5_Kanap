@@ -37,7 +37,7 @@ async function displayProducts() {
 const displayShop = parser.parseFromString(productsItems, "text/html");
 productsSection.appendChild(displayShop.body.firstChild);
 }
-
+}
 
 
  
