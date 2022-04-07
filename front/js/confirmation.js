@@ -5,5 +5,5 @@ function confirmation() {
     console.log(localStorage.getItem("orderId"));
     localStorage.clear();
   }
-  confirmation();
+  confirmation()
   
