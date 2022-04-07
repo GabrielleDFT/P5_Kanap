@@ -92,5 +92,5 @@ const cartButton = document.getElementById("addToCart")
             addToCart();
           
         };
-    });;
+    });
 ;
