@@ -282,7 +282,7 @@ order.addEventListener("click", (e) => {
         console.log("une erreur est survenue");
       });
   }
-});;
+});
 
 
 
