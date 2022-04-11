@@ -10,7 +10,7 @@ const quantityChoice = document.querySelector("#quantity");
 
 
 // ---------------------------------CALL TO API TO RETRIEVE ITEMS--------------------------------------------
-//getArticles();
+getArticles();
 function getArticles() {
     fetch("http://localhost:3000/api/products/" + idProduct)
         .then((res) => {
