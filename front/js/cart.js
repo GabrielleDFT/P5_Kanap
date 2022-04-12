@@ -1,165 +1,199 @@
 
-// RETRIEVING CART FROM LOCAL STORAGE
-let itemsInLocalStorage = JSON.parse(localStorage.getItem('cart'));  
-console.log(cart);
+// OL/ RETRIEVING CART FROM LOCAL STORAGE
+var itemsInLocalStorage = JSON.parse(localStorage.getItem("infoCart"));  
+console.log("");
+console.table(itemsInLocalStorage);
 
-// Variable
-var productQuantity = document.getElementsByClassName("itemQuantity");
+//---------------------------------- OL/creation du contenu de la page--------------------------------------
+// creation du contenu de la page
+async function creationPanier() {
+  fetch("http://localhost:3000/api/products")
+    .then(function (reponseAPI) {
+      return reponseAPI.json();
+    })
 
-// DISPLAY PRODUCT
-async function displayCart() {
-    const parser = new DOMParser();
-    const positionEmptyCart = document.getElementById("cart__items");
-    let cartArray = [];
-  
-    // IF Empty Localstorage 
-    if (itemsInLocalStorage === null || itemsInLocalStorage == 0) {
-      positionEmptyCart.textContent = "Votre panier est vide";
-    } else {
-      // IF Products in LocalStorage
-      for (i = 0; i < itemsInLocalStorage.length; i++) {
-        const product = await getProductById(itemsInLocalStorage[i].id);
-        const totalPriceItem = (product.price *= itemsInLocalStorage[i].quantity);
-        cartArray += `
-         <article class="cart__item" data-id=${itemsInLocalStorage[i].id}>
-         <div class="cart__item__img">
-           <img src="${product.imageUrl}" alt="Photographie d'un canapé">
-         </div>
-         <div class="cart__item__content">
-           <div class="cart__item__content__titlePrice">
-             <h2>${product.name}</h2>
-             <p>${itemsInLocalStorage[i].color}</p>
-             <p>
-             
-             ${totalPriceItem} €</p>
-           </div>
-           <div class="cart__item__content__settings">
-             <div class="cart__item__content__settings__quantity">
-               <p>Qté : </p>
-               <input data-id= ${itemsInLocalStorage[i].id} data-color= ${itemsInLocalStorage[i].color} type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${itemsInLocalStorage[i].quantity}>
-             </div>
-             <div class="cart__item__content__settings__delete">
-               <p data-id= ${itemsInLocalStorage[i].id} data-color= ${itemsInLocalStorage[i].color} class="deleteItem">Supprimer</p>
-             </div>
-           </div>
-         </div>
-       </article>
-       `;
+    .then(function (ArticleAPI) {
+      console.log("");
+      console.table(ArticleAPI);
+      let idArticlesAPI = ArticleAPI.map((el) => el._id);
+
+      for (let articles of itemsInLocalStorage) {
+        let id = articles["id"];
+        let indexId = idArticlesAPI.indexOf(id);
+        let prix = ArticleAPI[indexId].price;
+        let couleur = articles["couleur"];
+        let url = ArticleAPI[indexId].imageUrl;
+        let txtAlt = ArticleAPI[indexId].altTxt;
+        let nom = ArticleAPI[indexId].name;
+        let quantite = articles["quantite"];
+        // creation balise article
+        let baliseArticle = document.createElement("article");
+        let bArticle = document
+          .getElementById("cart__items")
+          .appendChild(baliseArticle);
+        bArticle.classList.add("cart__item");
+        bArticle.setAttribute("data-id", id);
+        bArticle.setAttribute("data-color", couleur);
+
+        // creation de la balise div pour l'image de l'article
+        let baliseDivImg = document.createElement("div");
+        let bDivImg = bArticle.appendChild(baliseDivImg);
+        bDivImg.classList.add("cart__item__img");
+
+
+        // creation de la balise pour l'image de l'article
+        let baliseImg = document.createElement("img");
+        let bImg = bDivImg.appendChild(baliseImg);
+        bImg.src = url;
+        bImg.alt = txtAlt;
+
+        // creation de la balise div pour les details de l'article
+        let baliseDivDetails = document.createElement("div");
+        let bDivDetails = bArticle.appendChild(baliseDivDetails);
+        bDivDetails.classList.add("cart__item__content");
+
+        // creation de la balise div pour la description de l'article
+        let baliseDivDetailsDescription = document.createElement("div");
+        let bDivDetailsDescription = bDivImg.nextElementSibling.appendChild(
+          baliseDivDetailsDescription
+        );
+        bDivDetailsDescription.classList.add(
+          "cart__item__content__description"
+        );
+
+        // creation des balises h2 p p pour la description de l'article
+        let baliseDivDetailsDescriptionH2 = document.createElement("h2");
+        let baliseDivDetailsDescriptionP1 = document.createElement("p");
+        let baliseDivDetailsDescriptionP2 = document.createElement("p");
+        bDivDetailsDescription.appendChild(
+          baliseDivDetailsDescriptionH2
+        ).innerText = nom;
+        bDivDetailsDescription.appendChild(
+          baliseDivDetailsDescriptionP1
+        ).innerText = couleur;
+        bDivDetailsDescription.appendChild(
+          baliseDivDetailsDescriptionP2
+        ).innerText = prix + " €";
+
+        // creation div pour modifier les details
+        let baliseDivModifDetails = document.createElement("div");
+        let bDivModifdetails = bDivDetails.appendChild(baliseDivModifDetails);
+        bDivModifdetails.classList.add("cart__item__content__settings");
+
+        // creation div pour modifier les quantités
+        let baliseDivModifDetailsQuantite = document.createElement("div");
+        let bDivModifDetailsQuantite = bDivModifdetails.appendChild(
+          baliseDivModifDetailsQuantite
+        );
+        bDivModifDetailsQuantite.classList.add(
+          "cart__item__content__settings__quantity"
+        );
+
+        // creation de la balise p et input pour modifier les quantités
+        let balisePModifDetailsQuantite = document.createElement("div");
+        let baliseInputModifDetailsQuantite = document.createElement("input");
+        bDivModifDetailsQuantite.appendChild(
+          balisePModifDetailsQuantite
+        ).innerText = "Quantité : ";
+        let bInputModifDetailsQuantite = bDivModifDetailsQuantite.appendChild(
+          baliseInputModifDetailsQuantite
+        );
+        bInputModifDetailsQuantite.setAttribute("input", "number");
+        bInputModifDetailsQuantite.setAttribute("name", "itemQuantity");
+        bInputModifDetailsQuantite.setAttribute("min", 1);
+        bInputModifDetailsQuantite.setAttribute("max", 100);
+        bInputModifDetailsQuantite.setAttribute("value", quantite);
+        bInputModifDetailsQuantite.classList.add("itemQuantity");
+
+        // creation de la div pour supprimer l'article
+        let baliseDivSupprimer = document.createElement("div");
+        let bDivSupprimer = bDivModifdetails.appendChild(baliseDivSupprimer);
+        bDivSupprimer.classList.add("cart__item__content__settings__delete");
+
+        // creation de la balise p pour supprimer l'article
+        let balisePSupprimer = document.createElement("p");
+        let bPSupprimer = bDivSupprimer.appendChild(balisePSupprimer);
+        bPSupprimer.classList.add("deleteItem");
+        bPSupprimer.innerText = "supprimer";
       }
-      // TOTAL PRODUCT & PRICE IN CART 
-      let totalQuantity = 0;
-      let totalPrice = 0;
-      for (i = 0; i < itemsInLocalStorage.length; i++) {
-        const article = await getProductById(itemsInLocalStorage[i].id);
-        totalQuantity += parseInt(itemsInLocalStorage[i].quantity);
-        totalPrice += parseInt(article.price * itemsInLocalStorage[i].quantity);
-      }
-      document.getElementById("totalQuantity").innerHTML = totalQuantity;
-      document.getElementById("totalPrice").innerHTML = totalPrice;
-      if (i == itemsInLocalStorage.length) {
-        const displayBasket = parser.parseFromString(cartArray, "text/html");
-        positionEmptyCart.appendChild(displayBasket.body);
-        changeQuantity();
-        deleteItem();
-      }
-    }
-  }
-
-// RETRIEVING PRODUCTS FROM API
-async function getProductById(productId) {
-    return fetch("http://localhost:3000/api/products/" + productId)
-      .then(function (res) {
-        return res.json();
-      })
-      .catch((err) => {
-        // Une erreur est survenue
-        console.log("error");
-      })
-      .then(function (response) {
-        return response;
-      });
-  }
-  displayCart();
-
-// ADD PRODUCT
-function addCart(product) {
-    let cart = getCart(); 
-    let itsExist = false;
-    cart.map(product => {
-        if(product.id == product.id && product.colors == product.colors) {
-            itsExist = true;
-            item.newQuantity += parseInt(product.quantity);
-        }  
+      articleSuppression();
+      articleModifQuantite();
+      calculNombreArticle();
+      quantiteTotaleAffichage();
+      prixTotal();
+    })
+    .catch(function (error) {
+      console.log("Erreur lors de la communication avec l'API");
+      console.log(error);
     });
-        if(itsExist == false) {
-        cart.push(product);  
-    }
-    saveCart(cart);     
-};
-
-// UPDATE QUANTITY PRODUCT
-function updateQuantity() {
-    const productQuantity = document.querySelectorAll('.itemQuantity');
-    for (let i = 0; i < productQuantity.length; i++) {
-        productQuantity[i].addEventListener('change', (event) => {
-        event.preventDefault();
-        const productNewQuantity = event.target.value;
-        const newCart = {
-          id: cart[i].id,
-          colors: cart[i].colors,
-          quantity: productNewQuantity,
-          price: cart[i].price,
-        };
-        cart[i] = newCart;
-        localStorage.clear();
-        localStorage.setItem('cart',JSON.stringify(cart));
-        location.reload();
-      });
-    }
-    console.log(cart);
 }
+creationPanier();
+//-----------------------------------------------------------------------------------------------------
 
-// DELETE PRODUCT
+//--------------------------1-TOTAL DES PRODUITS------------------------------------
+function getTotals(){
+  // Total quantity
+  var productQuantity = document.getElementsByClassName('itemQuantity');
+  var myLength = productQuantity.length,
+  totalQuantity = 0;
+
+  for (var i = 0; i < myLength; ++i) {
+    totalQuantity += productQuantity[i].valueAsNumber;
+  }
+
+  var productTotalQuantity = document.getElementById('totalQuantity');
+  productTotalQuantity.innerHTML = totalQuantity;
+  console.log(totalQuantity);
+
+  // Total Price
+  totalPrice = 0;
+
+  for (var i = 0; i < myLength; ++i) {
+      totalPrice += (productQuantity[i].valueAsNumber * itemsInLocalStorage[i].priceProduct);
+  }
+
+  var productTotalPrice = document.getElementById('totalPrice');
+  productTotalPrice.innerHTML = totalPrice;
+  console.log(totalPrice);
+}
+getTotals();
+//------------------------------------------------------------------------------------------------
+
+//-------------------------------------- 2-DELETE PRODUCT----------------------------------------------
 function deleteProduct() {  
     const eraseProduct = document.querySelectorAll('.deleteItem');  
     eraseProduct.forEach((eraseProduct) => {
     eraseProduct.addEventListener("click", (event) => {
         event.preventDefault();
+         //Delete Id & Color
         const deleteId = event.target.getAttribute("data-id");
         const deleteColor = event.target.getAttribute("data-color");
         itemsInLocalStorage = itemsInLocalStorage.filter(
-          (element) => !(element.id == deleteId && element.color == deleteColor)
+          (el) => !(el.id == deleteId && el.color == deleteColor)
         );
         console.log(itemsInLocalStorage);
         deleteConfirm = window.confirm("Etes vous sûr de vouloir supprimer cet article ?");
         if (deleteConfirm == true) {
           localStorage.setItem("cartItems", JSON.stringify(itemsInLocalStorage));
+
+          //Alerte produit supprimé et refresh
           location.reload();
           alert("Article supprimé avec succès");
         }
       });
     });
 }
+deleteProduct();
+//-----------------------------------------------------------------------------------
 
-// EMPTY CART
-function getCart() {
-    let cart = localStorage.getItem("cart");
-      if (cart < 1) {  
-      return[];         
-    } else {
-      return JSON.parse(cart);
-    };
-}
-// Linéarisation (transforme données complexes en chaine de caractères)
-function saveCart(cart) {                               
-    localStorage.setItem('cart', JSON.stringify(cart)); 
-}
 
 //--------------------------------------------EVENTS----------------------------------------------
-// Variables REGEX
-var nameRegex = /^[a-zA-Z\-çñàéèêëïîôüù ]{3}$/;
-var adressRegex = /^[0-9a-zA-Z\s,.'-çñàéèêëïîôüù]{3}$/;
-var emailRegex = /^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$/;
+// Create Variables REGEX
+//var nameRegex = /^[a-zA-Z\-çñàéèêëïîôüù ]{3}$/;
+var nameRegex = new RegExp("^[a-zA-Z\-çñàéèêëïîôüù ]{3}$/");
+var adressRegexExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+var emailRegexExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
+//let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
 
 // Retrieving form id 
 const firstName = document.getElementById("firstName");
@@ -225,7 +259,6 @@ email.addEventListener("input", (event) => {
     }
   });
 
-
 let order = document.getElementById("order");
 order.addEventListener("click", (e) => {
   e.preventDefault();
@@ -245,7 +278,7 @@ order.addEventListener("click", (e) => {
     city.value === "" ||
     email.value === ""
   ) {
-    alert("Vous devez renseigner vos coordonnées pour passer commande.");
+    alert("Vous devez renseigner vos coordonnées pour passer commande");
   } else if (
     nameRegex.test(firstName.value) == false ||
     nameRegex.test(lastName.value) == false ||
@@ -253,7 +286,7 @@ order.addEventListener("click", (e) => {
     nameRegex.test(city.value) == false ||
     emailRegex.test(email.value) == false
   ) {
-    alert("Merci de renseigner correctement vos coordonnées.");
+    alert("Merci de renseigner correctement vos coordonnées");
   } else {
     let products = [];
     itemsInLocalStorage.forEach((order) => {
@@ -265,24 +298,31 @@ order.addEventListener("click", (e) => {
     // CALL TO API Order/ POST METHOD (pr envoyer les tableaux)
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
+       body: JSON.stringify(pageOrder),
       headers: {
-        Accept: "application/json",
+        'Accept': 'application/json',
         "Content-type": "application/json",
       },
-      body: JSON.stringify(pageOrder),
+     
     })
       .then((res) => {
         return res.json();
       })
-      .then((confirm) => {
-        window.location.href = "./confirmation.html?orderId=" + confirm.orderId;
+      .then((data) => {
+        console.log(data);
         localStorage.clear();
+        localStorage.setItem("orderId", data.orderId);
+        window.location.href = "confirmation.html";
       })
-      .catch((error) => {
+      .catch((err) => {
         console.log("une erreur est survenue");
       });
   }
 });
+
+
+
+
 
 
 
