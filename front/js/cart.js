@@ -1,11 +1,11 @@
 
-// OL/ RETRIEVING CART FROM LOCAL STORAGE
+
+// RETRIEVING CART FROM LOCAL STORAGE
 var itemsInLocalStorage = JSON.parse(localStorage.getItem("infoCart"));  
 console.log("");
 console.table(itemsInLocalStorage);
 
-//---------------------------------- OL/creation du contenu de la page--------------------------------------
-// creation du contenu de la page
+//----------------------------------CREATE CONTENT FOR WEBPAGE--------------------------------------
 async function creationPanier() {
   fetch("http://localhost:3000/api/products")
     .then(function (reponseAPI) {
@@ -15,56 +15,51 @@ async function creationPanier() {
     .then(function (ArticleAPI) {
       console.log("");
       console.table(ArticleAPI);
-      let idArticlesAPI = ArticleAPI.map((el) => el._id);
+      var idArticlesAPI = ArticleAPI.map((el) => el._id);
 
-      for (let articles of itemsInLocalStorage) {
-        let id = articles["id"];
-        let indexId = idArticlesAPI.indexOf(id);
-        let prix = ArticleAPI[indexId].price;
-        let couleur = articles["couleur"];
-        let url = ArticleAPI[indexId].imageUrl;
-        let txtAlt = ArticleAPI[indexId].altTxt;
-        let nom = ArticleAPI[indexId].name;
-        let quantite = articles["quantite"];
-        // creation balise article
-        let baliseArticle = document.createElement("article");
-        let bArticle = document
+      for (var articles of itemsInLocalStorage) {
+        var id = articles["id"];
+        var indexId = idArticlesAPI.indexOf(id);
+        var prix = ArticleAPI[indexId].price;
+        var couleur = articles["couleur"];
+        var url = ArticleAPI[indexId].imageUrl;
+        var txtAlt = ArticleAPI[indexId].altTxt;
+        var nom = ArticleAPI[indexId].name;
+        var quantite = articles["quantite"];
+        // Create Item
+        var baliseArticle = document.createElement("article");
+        var bArticle = document
           .getElementById("cart__items")
           .appendChild(baliseArticle);
         bArticle.classList.add("cart__item");
         bArticle.setAttribute("data-id", id);
         bArticle.setAttribute("data-color", couleur);
 
-        // creation de la balise div pour l'image de l'article
-        let baliseDivImg = document.createElement("div");
-        let bDivImg = bArticle.appendChild(baliseDivImg);
+        // Create Img Item
+        var baliseDivImg = document.createElement("div");
+        var bDivImg = bArticle.appendChild(baliseDivImg);
         bDivImg.classList.add("cart__item__img");
-
-
-        // creation de la balise pour l'image de l'article
-        let baliseImg = document.createElement("img");
-        let bImg = bDivImg.appendChild(baliseImg);
+        var baliseImg = document.createElement("img");
+        var bImg = bDivImg.appendChild(baliseImg);
         bImg.src = url;
         bImg.alt = txtAlt;
 
-        // creation de la balise div pour les details de l'article
-        let baliseDivDetails = document.createElement("div");
-        let bDivDetails = bArticle.appendChild(baliseDivDetails);
+        // Create Details Item
+        var baliseDivDetails = document.createElement("div");
+        var bDivDetails = bArticle.appendChild(baliseDivDetails);
         bDivDetails.classList.add("cart__item__content");
 
-        // creation de la balise div pour la description de l'article
-        let baliseDivDetailsDescription = document.createElement("div");
-        let bDivDetailsDescription = bDivImg.nextElementSibling.appendChild(
+        // Create Description Item
+        var baliseDivDetailsDescription = document.createElement("div");
+        var bDivDetailsDescription = bDivImg.nextElementSibling.appendChild(
           baliseDivDetailsDescription
         );
         bDivDetailsDescription.classList.add(
           "cart__item__content__description"
         );
-
-        // creation des balises h2 p p pour la description de l'article
-        let baliseDivDetailsDescriptionH2 = document.createElement("h2");
-        let baliseDivDetailsDescriptionP1 = document.createElement("p");
-        let baliseDivDetailsDescriptionP2 = document.createElement("p");
+        var baliseDivDetailsDescriptionH2 = document.createElement("h2");
+        var baliseDivDetailsDescriptionP1 = document.createElement("p");
+        var baliseDivDetailsDescriptionP2 = document.createElement("p");
         bDivDetailsDescription.appendChild(
           baliseDivDetailsDescriptionH2
         ).innerText = nom;
@@ -75,27 +70,25 @@ async function creationPanier() {
           baliseDivDetailsDescriptionP2
         ).innerText = prix + " €";
 
-        // creation div pour modifier les details
-        let baliseDivModifDetails = document.createElement("div");
-        let bDivModifdetails = bDivDetails.appendChild(baliseDivModifDetails);
+        // Modify Details
+        var baliseDivModifDetails = document.createElement("div");
+        var bDivModifdetails = bDivDetails.appendChild(baliseDivModifDetails);
         bDivModifdetails.classList.add("cart__item__content__settings");
 
-        // creation div pour modifier les quantités
-        let baliseDivModifDetailsQuantite = document.createElement("div");
-        let bDivModifDetailsQuantite = bDivModifdetails.appendChild(
+        // Modify Quantity
+        var baliseDivModifDetailsQuantite = document.createElement("div");
+        var bDivModifDetailsQuantite = bDivModifdetails.appendChild(
           baliseDivModifDetailsQuantite
         );
         bDivModifDetailsQuantite.classList.add(
           "cart__item__content__settings__quantity"
         );
-
-        // creation de la balise p et input pour modifier les quantités
-        let balisePModifDetailsQuantite = document.createElement("div");
-        let baliseInputModifDetailsQuantite = document.createElement("input");
+        var balisePModifDetailsQuantite = document.createElement("div");
+        var baliseInputModifDetailsQuantite = document.createElement("input");
         bDivModifDetailsQuantite.appendChild(
           balisePModifDetailsQuantite
         ).innerText = "Quantité : ";
-        let bInputModifDetailsQuantite = bDivModifDetailsQuantite.appendChild(
+        var bInputModifDetailsQuantite = bDivModifDetailsQuantite.appendChild(
           baliseInputModifDetailsQuantite
         );
         bInputModifDetailsQuantite.setAttribute("input", "number");
@@ -105,14 +98,12 @@ async function creationPanier() {
         bInputModifDetailsQuantite.setAttribute("value", quantite);
         bInputModifDetailsQuantite.classList.add("itemQuantity");
 
-        // creation de la div pour supprimer l'article
-        let baliseDivSupprimer = document.createElement("div");
-        let bDivSupprimer = bDivModifdetails.appendChild(baliseDivSupprimer);
+        // Delete Item
+        var baliseDivSupprimer = document.createElement("div");
+        var bDivSupprimer = bDivModifdetails.appendChild(baliseDivSupprimer);
         bDivSupprimer.classList.add("cart__item__content__settings__delete");
-
-        // creation de la balise p pour supprimer l'article
-        let balisePSupprimer = document.createElement("p");
-        let bPSupprimer = bDivSupprimer.appendChild(balisePSupprimer);
+        var balisePSupprimer = document.createElement("p");
+        var bPSupprimer = bDivSupprimer.appendChild(balisePSupprimer);
         bPSupprimer.classList.add("deleteItem");
         bPSupprimer.innerText = "supprimer";
       }
@@ -128,11 +119,10 @@ async function creationPanier() {
     });
 }
 creationPanier();
-//-----------------------------------------------------------------------------------------------------
 
-//--------------------------1-TOTAL DES PRODUITS------------------------------------
+//---------------------------TOTAL------------------------------------
 function getTotals(){
-  // Total quantity
+  // Total Quantity
   var productQuantity = document.getElementsByClassName('itemQuantity');
   var myLength = productQuantity.length,
   totalQuantity = 0;
@@ -157,34 +147,6 @@ function getTotals(){
   console.log(totalPrice);
 }
 getTotals();
-//------------------------------------------------------------------------------------------------
-
-//-------------------------------------- 2-DELETE PRODUCT----------------------------------------------
-function deleteProduct() {  
-    const eraseProduct = document.querySelectorAll('.deleteItem');  
-    eraseProduct.forEach((eraseProduct) => {
-    eraseProduct.addEventListener("click", (event) => {
-        event.preventDefault();
-         //Delete Id & Color
-        const deleteId = event.target.getAttribute("data-id");
-        const deleteColor = event.target.getAttribute("data-color");
-        itemsInLocalStorage = itemsInLocalStorage.filter(
-          (el) => !(el.id == deleteId && el.color == deleteColor)
-        );
-        console.log(itemsInLocalStorage);
-        deleteConfirm = window.confirm("Etes vous sûr de vouloir supprimer cet article ?");
-        if (deleteConfirm == true) {
-          localStorage.setItem("cartItems", JSON.stringify(itemsInLocalStorage));
-
-          //Alerte produit supprimé et refresh
-          location.reload();
-          alert("Article supprimé avec succès");
-        }
-      });
-    });
-}
-deleteProduct();
-//-----------------------------------------------------------------------------------
 
 
 //--------------------------------------------EVENTS----------------------------------------------
@@ -202,7 +164,7 @@ const address = document.getElementById("address");
 const city = document.getElementById("city");
 const email = document.getElementById("email");
 
-// 1-LISTENING TO "FirstName" EVENT
+// 1-Listening to "FirstName" 
 firstName.addEventListener("input", (event) => {
     event.preventDefault();
     if (nameRegex.test(firstName.value) == false || firstName.value == "") {
@@ -214,7 +176,7 @@ firstName.addEventListener("input", (event) => {
       return true;
     }
   });
-// 2-LISTENING TO "LastName" EVENT 
+// 2-Listening to "LastName" 
 lastName.addEventListener("input", (event) => {
     event.preventDefault();
     if (nameRegex.test(lastName.value) == false || lastName.value == "") {
@@ -225,7 +187,7 @@ lastName.addEventListener("input", (event) => {
       return true;
     }
   });
-// 3-LISTENING TO "Address" EVENT 
+// 3-Listening to "Address" 
 address.addEventListener("input", (event) => {
     event.preventDefault();
     if (nameRegex.test(address.value) == false || address.value == "") {
@@ -236,7 +198,7 @@ address.addEventListener("input", (event) => {
       return true;
     }
   });
-// 4-LISTENING TO "City" EVENT
+// 4-Listening to "City" 
 city.addEventListener("input", (event) => {
     event.preventDefault();
     if (nameRegex.test(city.value) == false || city.value == "") {
@@ -247,7 +209,7 @@ city.addEventListener("input", (event) => {
       return true;
     }
   });
-// 5-LISTENING TO "Email" EVENT
+// 5-Listening to "Email"
 email.addEventListener("input", (event) => {
     event.preventDefault();
     if (nameRegex.test(email.value) == false || email.value == "") {
@@ -259,7 +221,7 @@ email.addEventListener("input", (event) => {
     }
   });
 
-let order = document.getElementById("order");
+var order = document.getElementById("order");
 order.addEventListener("click", (e) => {
   e.preventDefault();
   // OBJECT CREATION ORDER PRODUCT / DataOrder Array to have data Order user 
@@ -295,7 +257,7 @@ order.addEventListener("click", (e) => {
 
     let pageOrder = { dataOrder, products };
 
-    // CALL TO API Order/ POST METHOD (pr envoyer les tableaux)
+    // CALL TO API Order / POST METHOD 
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
        body: JSON.stringify(pageOrder),
