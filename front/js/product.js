@@ -1,4 +1,5 @@
 
+
 var str = window.location.href;
 var url = new URL(str);
 var idProduct = url.searchParams.get("id");
@@ -8,16 +9,14 @@ let article = "";
 const colorPicked = document. querySelector("#colors");
 const quantityPicked = document.querySelector("#quantity");
 
+// ---------------------------------CALL TO API TO RETRIEVE ITEMS--------------------------------------------
 getArticle();
-
-// ---------------------------------RETRIEVING ITEMS FROM API--------------------------------------------
 function getArticle() {
     fetch("http://localhost:3000/api/products/" + idProduct)
     .then((res) => {
         return res.json();
     })
-    // Retrieving Data from API to DOM
-    .then(async function (resultatAPI) {
+    .then(async function (resultatAPI) { // Retrieving Data from API to DOM
         article = await resultatAPI;
         console.table(article);
         if (article){
@@ -29,7 +28,7 @@ function getArticle() {
     })
 }
  
-// ---------------------------------DISPLAY ITEMS--------------------------------------------------------
+// ---------------------------------DISPLAY ITEM (choose from Home) ON PRODUCT PAGE---------------------------------------
 function getPost(article){
     // Display Item img
     var productImg = document.createElement("img");
@@ -37,7 +36,7 @@ function getPost(article){
     productImg.src = article.imageUrl;
     productImg.alt = article.altTxt;
 
-    // Display Item Title 
+    // Display Item Title/Name 
     var productName = document.getElementById('title');
     productName.innerHTML = article.name;
 
@@ -60,24 +59,22 @@ function getPost(article){
     addToCart(article);
 }
 
-// ---------------------------------FUNCTION ADD TO CART-------------------------------------------
+// ---------------------------------ADD TO CART FUNCTION-------------------------------------------
 function addToCart(article) {
-    const btn_envoyerPanier = document.querySelector("#addToCart");
+    const addToCartButn = document.querySelector("#addToCart");
 
-    //Ecouter le panier avec 2 conditions couleur non nulle et quantit� entre 1 et 100
-    btn_envoyerPanier.addEventListener("click", (event)=>{
+    // ------------LISTENING TO THE EVENT CART---------------------
+    addToCartButn.addEventListener("click", (event)=>{
+             /* 2 color conditions & quantity between 1 and 100 */
         if (quantityPicked.value > 0 && quantityPicked.value <=100 && quantityPicked.value != 0){
 
-    //Recup Color choice
-    var choixCouleur = colorPicked.value;
-                
-    //Recup Quantity choice
-    var choixQuantite = quantityPicked.value;
+    var colorChoice = colorPicked.value;/* Retrieve Color choice */
+    var choixQuantite = quantityPicked.value;/* Retrieve Quantity choice */
 
-    //Recup Item Options / add to cart
+    // Create an Object & Retrieve Item Options 
     var optionsProduit = {
         idProduit: idProduct,
-        couleurProduit: choixCouleur,
+        couleurProduit: colorChoice,
         quantiteProduit: Number(choixQuantite),
         nomProduit: article.name,
         prixProduit: article.price,
@@ -90,8 +87,8 @@ function addToCart(article) {
 var produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
 
 // ---------------------------------CONFIRMATION-------------------------------------------
-    const popupConfirmation =() =>{ //Confirmation Add to Cart
-        if(window.confirm(`Votre commande de ${choixQuantite} ${article.name} de couleur ${choixCouleur} au prix de ${price.innerHTML} € a bien été ajouté au panier.
+    const popupConfirmation =() =>{ // Confirmation Pop-up add to Cart 
+        if(window.confirm(`Votre commande de ${choixQuantite} ${article.name} de couleur ${colorChoice} au prix de ${price.innerHTML} € a bien été ajouté au panier.
         OK pour consultez le panier, ANNULER pour continuer`)){
             window.location.href ="cart.html";
         }
@@ -101,7 +98,7 @@ var produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
     //If Cart content
     if (produitLocalStorage) {
     const resultFind = produitLocalStorage.find(
-        (el) => el.idProduit === idProduct && el.couleurProduit === choixCouleur);
+        (el) => el.idProduit === idProduct && el.couleurProduit === colorChoice);
         //If Item already in Cart
         if (resultFind) {
             var newQuantite =
@@ -110,7 +107,7 @@ var produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
             console.table(produitLocalStorage);
             popupConfirmation();
-        //Si le produit command� n'est pas dans le panier
+        // If ordered Item not in Cart ?*/
         } else {
             produitLocalStorage.push(optionsProduit);
             localStorage.setItem("produit", JSON.stringify(produitLocalStorage));
