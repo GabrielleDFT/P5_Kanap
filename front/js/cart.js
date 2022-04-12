@@ -80,7 +80,50 @@ for (var produit in itemsInLocalStorage){
 }}
 getCart();
 
+//----------------------MODIFY QUANTITY------------------------------
+function modify() {
+  var modifQuantity = document.querySelectorAll(".itemQuantity");
 
+  for (let k = 0; k < modifQuantity.length; k++){
+    modifQuantity[k].addEventListener("change" , (e) => {
+          e.preventDefault();
+
+          //Select to Modify Item by Id & Color
+          var quantityModif = itemsInLocalStorage[k].quantiteProduit;
+          var modifValue = modifQuantity[k].valueAsNumber;
+          
+          const result = itemsInLocalStorage.find((el) => el.modifValue !== quantityModif);
+          result.quantiteProduit = modifValue;
+          itemsInLocalStorage[k].quantiteProduit = result.quantiteProduit;
+
+          localStorage.setItem("produit", JSON.stringify(itemsInLocalStorage));
+          location.reload();   // refresh rapide
+      })
+  }
+}
+modify();
+
+//----------------------DELETE AN ITEM------------------------------
+function deleteItem() {
+  var btnDelete = document.querySelectorAll(".deleteItem");
+
+  for (var j = 0; j < btnDelete.length; j++){
+    btnDelete[j].addEventListener("click" , (e) => {
+          e.preventDefault();
+
+          // Select to Delete Item by Id & Color
+          var idDelete = itemsInLocalStorage[j].idProduit;
+          var colorDelete = itemsInLocalStorage[j].couleurProduit;
+
+          itemsInLocalStorage = itemsInLocalStorage.filter( el => el.idProduit !== idDelete || el.couleurProduit !== colorDelete );
+          localStorage.setItem("produit", JSON.stringify(itemsInLocalStorage));
+          //Pop-up for Deleted Item
+          alert("Ce produit a bien été supprimé du panier");
+          location.reload();
+      })
+  }
+}
+deleteItem();
 
 
 
