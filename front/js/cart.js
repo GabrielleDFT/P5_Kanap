@@ -1,286 +1,84 @@
 
+// -------------------RETRIEVING CART FROM LOCAL STORAGE------------
+var itemsInLocalStorage = JSON.parse(localStorage.getItem("produit"));  
+console.log(localStorage);
+// console.table(itemsInLocalStorage);
 
-// RETRIEVING CART FROM LOCAL STORAGE
-var itemsInLocalStorage = JSON.parse(localStorage.getItem("infoCart"));  
-console.log("");
-console.table(itemsInLocalStorage);
+//--------------------DISPLAY CART--------------------------
+const selectCart = document.querySelector("#cart__items");
 
-//----------------------------------CREATE CONTENT FOR WEBPAGE--------------------------------------
-async function creationPanier() {
-  fetch("http://localhost:3000/api/products")
-    .then(function (reponseAPI) {
-      return reponseAPI.json();
-    })
+function getCart(){
 
-    .then(function (ArticleAPI) {
-      console.log("");
-      console.table(ArticleAPI);
-      var idArticlesAPI = ArticleAPI.map((el) => el._id);
+if (itemsInLocalStorage === null || itemsInLocalStorage == 0) {// If Empty cart
+    const emptyCart = `<p>Votre panier est vide</p>`;
+    selectCart.innerHTML = emptyCart;
+} else {
+for (var produit in itemsInLocalStorage){
+                    // Insert Article
+    var itemArticle = document.createElement("article");
+    document.querySelector("#cart__items").appendChild(itemArticle);
+    itemArticle.className = "cart__item";
+    itemArticle.setAttribute('data-id', itemsInLocalStorage[produit].idProduit);
+                      // Insert " div Img"
+    var cartImg = document.createElement("div");
+    itemArticle.appendChild(cartImg);
+    cartImg.className = "cart__item__img";
+    var itemImg = document.createElement("img");
+    cartImg.appendChild(itemImg);
+    itemImg.src = itemsInLocalStorage[produit].imgProduit;
+    itemImg.alt = itemsInLocalStorage[produit].altImgProduit;
+                      // Insert "div Content"
+    var cartContent = document.createElement("div");
+    itemArticle.appendChild(cartContent);
+    cartContent.className = "cart__item__content";
+                      // Insert "div Title Price"
+    var titlePrice = document.createElement("div");
+    cartContent.appendChild(titlePrice);
+    titlePrice.className = "cart__item__content__titlePrice";
+                      // Insert Item Name
+    var itemName = document.createElement("h2");
+    titlePrice.appendChild(itemName);
+    itemName.innerHTML = itemsInLocalStorage[produit].nomProduit;
+                      // Insert Price
+     var itemPrice = document.createElement("p");
+     titlePrice.appendChild(itemPrice);
+     itemPrice.innerHTML = itemsInLocalStorage[produit].prixProduit + " �";
+                      // Insert Color
+    var itemColor = document.createElement("p");
+    itemName.appendChild(itemColor);
+    itemColor.innerHTML = itemsInLocalStorage[produit].couleurProduit;
+    itemColor.style.fontSize = "20px";
+                      // Insert "div Settings"
+    var contentSet = document.createElement("div");
+    cartContent.appendChild(contentSet);
+    contentSet.className = "cart__item__content__settings";
+                      // Insert Quantity
+    var itemQuantity = document.createElement("div");
+    contentSet.appendChild(itemQuantity );
+    itemQuantity .className = "cart__item__content__settings__quantity";
+    var quantityItem = document.createElement("p");
+    itemQuantity .appendChild(quantityItem);
+    quantityItem.innerHTML = "Qt : ";
 
-      for (var articles of itemsInLocalStorage) {
-        var id = articles["id"];
-        var indexId = idArticlesAPI.indexOf(id);
-        var prix = ArticleAPI[indexId].price;
-        var couleur = articles["couleur"];
-        var url = ArticleAPI[indexId].imageUrl;
-        var txtAlt = ArticleAPI[indexId].altTxt;
-        var nom = ArticleAPI[indexId].name;
-        var quantite = articles["quantite"];
-        // Create Item
-        var baliseArticle = document.createElement("article");
-        var bArticle = document
-          .getElementById("cart__items")
-          .appendChild(baliseArticle);
-        bArticle.classList.add("cart__item");
-        bArticle.setAttribute("data-id", id);
-        bArticle.setAttribute("data-color", couleur);
-
-        // Create Img Item
-        var baliseDivImg = document.createElement("div");
-        var bDivImg = bArticle.appendChild(baliseDivImg);
-        bDivImg.classList.add("cart__item__img");
-        var baliseImg = document.createElement("img");
-        var bImg = bDivImg.appendChild(baliseImg);
-        bImg.src = url;
-        bImg.alt = txtAlt;
-
-        // Create Details Item
-        var baliseDivDetails = document.createElement("div");
-        var bDivDetails = bArticle.appendChild(baliseDivDetails);
-        bDivDetails.classList.add("cart__item__content");
-
-        // Create Description Item
-        var baliseDivDetailsDescription = document.createElement("div");
-        var bDivDetailsDescription = bDivImg.nextElementSibling.appendChild(
-          baliseDivDetailsDescription
-        );
-        bDivDetailsDescription.classList.add(
-          "cart__item__content__description"
-        );
-        var baliseDivDetailsDescriptionH2 = document.createElement("h2");
-        var baliseDivDetailsDescriptionP1 = document.createElement("p");
-        var baliseDivDetailsDescriptionP2 = document.createElement("p");
-        bDivDetailsDescription.appendChild(
-          baliseDivDetailsDescriptionH2
-        ).innerText = nom;
-        bDivDetailsDescription.appendChild(
-          baliseDivDetailsDescriptionP1
-        ).innerText = couleur;
-        bDivDetailsDescription.appendChild(
-          baliseDivDetailsDescriptionP2
-        ).innerText = prix + " €";
-
-        // Modify Details
-        var baliseDivModifDetails = document.createElement("div");
-        var bDivModifdetails = bDivDetails.appendChild(baliseDivModifDetails);
-        bDivModifdetails.classList.add("cart__item__content__settings");
-
-        // Modify Quantity
-        var baliseDivModifDetailsQuantite = document.createElement("div");
-        var bDivModifDetailsQuantite = bDivModifdetails.appendChild(
-          baliseDivModifDetailsQuantite
-        );
-        bDivModifDetailsQuantite.classList.add(
-          "cart__item__content__settings__quantity"
-        );
-        var balisePModifDetailsQuantite = document.createElement("div");
-        var baliseInputModifDetailsQuantite = document.createElement("input");
-        bDivModifDetailsQuantite.appendChild(
-          balisePModifDetailsQuantite
-        ).innerText = "Quantité : ";
-        var bInputModifDetailsQuantite = bDivModifDetailsQuantite.appendChild(
-          baliseInputModifDetailsQuantite
-        );
-        bInputModifDetailsQuantite.setAttribute("input", "number");
-        bInputModifDetailsQuantite.setAttribute("name", "itemQuantity");
-        bInputModifDetailsQuantite.setAttribute("min", 1);
-        bInputModifDetailsQuantite.setAttribute("max", 100);
-        bInputModifDetailsQuantite.setAttribute("value", quantite);
-        bInputModifDetailsQuantite.classList.add("itemQuantity");
-
-        // Delete Item
-        var baliseDivSupprimer = document.createElement("div");
-        var bDivSupprimer = bDivModifdetails.appendChild(baliseDivSupprimer);
-        bDivSupprimer.classList.add("cart__item__content__settings__delete");
-        var balisePSupprimer = document.createElement("p");
-        var bPSupprimer = bDivSupprimer.appendChild(balisePSupprimer);
-        bPSupprimer.classList.add("deleteItem");
-        bPSupprimer.innerText = "supprimer";
-      }
-      articleSuppression();
-      articleModifQuantite();
-      calculNombreArticle();
-      quantiteTotaleAffichage();
-      prixTotal();
-    })
-    .catch(function (error) {
-      console.log("Erreur lors de la communication avec l'API");
-      console.log(error);
-    });
+    var productQuantity = document.createElement("input");
+    itemQuantity .appendChild(productQuantity);
+    productQuantity.value = itemsInLocalStorage[produit].quantiteProduit;
+    productQuantity.className = "itemQuantity";
+    productQuantity.setAttribute("type", "number");
+    productQuantity.setAttribute("min", "1");
+    productQuantity.setAttribute("max", "100");
+    productQuantity.setAttribute("name", "itemQuantity");
+                      // Insert Delete Button
+    var itemDelete = document.createElement("div");
+    contentSet.appendChild(itemDelete);
+    itemDelete.className = "cart__item__content__settings__delete";
+    var deleteButton = document.createElement("p");
+    itemDelete.appendChild(deleteButton);
+    deleteButton.className = "deleteItem";
+    deleteButton.innerHTML = "Supprimer";
 }
-creationPanier();
-
-//---------------------------TOTAL------------------------------------
-function getTotals(){
-  // Total Quantity
-  var productQuantity = document.getElementsByClassName('itemQuantity');
-  var myLength = productQuantity.length,
-  totalQuantity = 0;
-
-  for (var i = 0; i < myLength; ++i) {
-    totalQuantity += productQuantity[i].valueAsNumber;
-  }
-
-  var productTotalQuantity = document.getElementById('totalQuantity');
-  productTotalQuantity.innerHTML = totalQuantity;
-  console.log(totalQuantity);
-
-  // Total Price
-  totalPrice = 0;
-
-  for (var i = 0; i < myLength; ++i) {
-      totalPrice += (productQuantity[i].valueAsNumber * itemsInLocalStorage[i].priceProduct);
-  }
-
-  var productTotalPrice = document.getElementById('totalPrice');
-  productTotalPrice.innerHTML = totalPrice;
-  console.log(totalPrice);
-}
-getTotals();
-
-
-//--------------------------------------------EVENTS----------------------------------------------
-// Create Variables REGEX
-//var nameRegex = /^[a-zA-Z\-çñàéèêëïîôüù ]{3}$/;
-var nameRegex = new RegExp("^[a-zA-Z\-çñàéèêëïîôüù ]{3}$/");
-var adressRegexExp = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
-var emailRegexExp = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-//let charRegExp = new RegExp("^[a-zA-Z ,.'-]+$");
-
-// Retrieving form id 
-const firstName = document.getElementById("firstName");
-const lastName = document.getElementById("lastName");
-const address = document.getElementById("address");
-const city = document.getElementById("city");
-const email = document.getElementById("email");
-
-// 1-Listening to "FirstName" 
-firstName.addEventListener("input", (event) => {
-    event.preventDefault();
-    if (nameRegex.test(firstName.value) == false || firstName.value == "") {
-      document.getElementById("firstNameErrorMsg").innerHTML =
-        "Prénom non valide";
-      return false;
-    } else {
-      document.getElementById("firstNameErrorMsg").innerHTML = "";
-      return true;
-    }
-  });
-// 2-Listening to "LastName" 
-lastName.addEventListener("input", (event) => {
-    event.preventDefault();
-    if (nameRegex.test(lastName.value) == false || lastName.value == "") {
-      document.getElementById("lastNameErrorMsg").innerHTML = "Nom non valide";
-      return false;
-    } else {
-      document.getElementById("lastNameErrorMsg").innerHTML = "";
-      return true;
-    }
-  });
-// 3-Listening to "Address" 
-address.addEventListener("input", (event) => {
-    event.preventDefault();
-    if (nameRegex.test(address.value) == false || address.value == "") {
-      document.getElementById("addressErrorMsg").innerHTML = "Adresse non valide";
-      return false;
-    } else {
-      document.getElementById("addressErrorMsg").innerHTML = "";
-      return true;
-    }
-  });
-// 4-Listening to "City" 
-city.addEventListener("input", (event) => {
-    event.preventDefault();
-    if (nameRegex.test(city.value) == false || city.value == "") {
-      document.getElementById("cityErrorMsg").innerHTML = "Ville introuvable";
-      return false;
-    } else {
-      document.getElementById("cityErrorMsg").innerHTML = "";
-      return true;
-    }
-  });
-// 5-Listening to "Email"
-email.addEventListener("input", (event) => {
-    event.preventDefault();
-    if (nameRegex.test(email.value) == false || email.value == "") {
-      document.getElementById("cityErrorMsg").innerHTML = "Email non valide";
-      return false;
-    } else {
-      document.getElementById("cityErrorMsg").innerHTML = "";
-      return true;
-    }
-  });
-
-var order = document.getElementById("order");
-order.addEventListener("click", (e) => {
-  e.preventDefault();
-  // OBJECT CREATION ORDER PRODUCT / DataOrder Array to have data Order user 
-  let dataOrder = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    address: address.value,
-    city: city.value,
-    email: email.value,
-  };
-// CHECKING VALID FORM
-  if (
-    firstName.value === "" ||
-    lastName.value === "" ||
-    address.value === "" ||
-    city.value === "" ||
-    email.value === ""
-  ) {
-    alert("Vous devez renseigner vos coordonnées pour passer commande");
-  } else if (
-    nameRegex.test(firstName.value) == false ||
-    nameRegex.test(lastName.value) == false ||
-    adressRegex.test(address.value) == false ||
-    nameRegex.test(city.value) == false ||
-    emailRegex.test(email.value) == false
-  ) {
-    alert("Merci de renseigner correctement vos coordonnées");
-  } else {
-    let products = [];
-    itemsInLocalStorage.forEach((order) => {
-      products.push(order.id);
-    });
-
-    let pageOrder = { dataOrder, products };
-
-    // CALL TO API Order / POST METHOD 
-    fetch("http://localhost:3000/api/products/order", {
-      method: "POST",
-       body: JSON.stringify(pageOrder),
-      headers: {
-        'Accept': 'application/json',
-        "Content-type": "application/json",
-      },
-     
-    })
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        console.log(data);
-        localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-        window.location.href = "confirmation.html";
-      })
-      .catch((err) => {
-        console.log("une erreur est survenue");
-      });
-  }
-});
+}}
+getCart();
 
 
 
