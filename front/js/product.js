@@ -56,7 +56,7 @@ function getPost(article){
         colorSelect.value = colors;
         colorSelect.innerHTML = colors;
     }
-    addToCart(article);/* ?*/
+    addToCart(article);
 }
 // ---------------------------------ADD TO CART FUNCTION-------------------------------------------
 function addToCart(article) {
