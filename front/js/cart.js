@@ -125,7 +125,60 @@ function deleteItem() {
 }
 deleteItem();
 
+//-----CLIENT INFOS TO LOCAL STORAGE FOR CONFIRMATION-----------------------------
+function Form(){
+  const orderButton = document.getElementById("order");
 
+  // Event Listening to Cart
+  orderButton.addEventListener("click", (event)=>{
+                // Retrieve Client Details Form 
+      var name = document.getElementById('firstName');
+      var familyName = document.getElementById('lastName');
+      var adress = document.getElementById('address');
+      var cityPlace = document.getElementById('city');
+      var mail = document.getElementById('email');
+
+      // Create an Array to Local Storage
+      var idProducts = [];
+      for (var i = 0; i < itemsInLocalStorage.length;i++) {
+          idProducts.push(itemsInLocalStorage[i].idProduit);
+      }
+      console.log(idProducts);
+
+      const order = {
+          contact : {
+              firstName: name.value,
+              lastName: familyName.value,
+              address: adress.value,
+              city: cityPlace.value,
+              email: mail.value,
+          },
+          products: idProducts,
+      } 
+
+      const options = {
+          method: 'POST',
+          body: JSON.stringify(order),// Transform JS Object "order" in JSON
+          headers: {
+              'Accept': 'application/json', 
+              "Content-Type": "application/json" 
+          },
+      };
+
+      fetch("http://localhost:3000/api/products/order", options)
+      .then((res) => res.json())
+      .then((data) => {
+          console.log(data);
+          localStorage.clear();
+          localStorage.setItem("orderId", data.orderId);
+          document.location.href = "confirmation.html";
+      })
+      .catch((err) => {
+          alert (err);
+      });
+      })
+}
+Form();
 
 
 
