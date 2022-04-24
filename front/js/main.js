@@ -12,7 +12,7 @@ async function getProducts() {// GET method to retrieve Data from API
     console.log(value);
     return value;
   })
-  .catch(function(err) {// Case of error
+  .catch(function(err) {// Error case
     });
 }
 
@@ -37,6 +37,13 @@ const displayShop = parser.parseFromString(productsItems, "text/html");
 productsSection.appendChild(displayShop.body.firstChild);
 }
 }
+
+
+ 
+
+  
+
+
 
 
  
