@@ -1,6 +1,5 @@
 
 //---------------------------------CART CONFIRMATION NUMBER-------------------------------------------
-
 function confirmation() {
     const confirmNumb = document.getElementById("orderId");
     confirmNumb.innerText = localStorage.getItem("orderId");
