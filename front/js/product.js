@@ -1,9 +1,8 @@
 
-
-
 var str = window.location.href;
 var url = new URL(str);
 var idProduct = url.searchParams.get("id");
+
 console.log(idProduct);
 let article = "";
 
@@ -24,11 +23,10 @@ function getArticle() {
             getPost(article);
         }
     })
-    .catch((error) => {
+    .catch((err) => {
         console.log("Error API");
     })
 }
- 
 // ---------------------------------DISPLAY ITEM (choose from Home) ON PRODUCT PAGE---------------------------------------
 function getPost(article){
                     // Display Item img
@@ -55,7 +53,6 @@ function getPost(article){
     }
     addToCart(article);
 }
-
 // ---------------------------------ADD TO CART FUNCTION-------------------------------------------
 function addToCart(article) {
     const addToCartButn = document.querySelector("#addToCart");
@@ -79,19 +76,17 @@ function addToCart(article) {
         imgProduit: article.imageUrl,
         altImgProduit: article.altTxt
     };
-
-// ---------------------------------INIT LOCAL STORAGE-------------------------------------------    
+//-----------------------------------INIT LOCAL STORAGE-------------------------------------------    
 var itemsInLocalStorage = JSON.parse(localStorage.getItem("produit"));
 
-// ---------------------------------CONFIRMATION-------------------------------------------
+//-----------------------------------CONFIRMATION-------------------------------------------
     const popupConfirmation =() =>{ // Confirmation Pop-up add to Cart 
         if(window.confirm(`Votre commande de ${quantityChoice} ${article.name} de couleur ${colorChoice} au prix de ${price.innerHTML} € a bien été ajouté au panier.
         OK pour consultez le panier, ANNULER pour continuer`)){
             window.location.href ="cart.html";
         }
     }
-
-// ---------------------------------IMPORT IN LOCAL STORAGE -------------------------------------------    
+//-----------------------------------IMPORT IN LOCAL STORAGE -------------------------------------------    
     //If Cart content
     if (itemsInLocalStorage) {
     const resultFind = itemsInLocalStorage.find(
@@ -101,10 +96,10 @@ var itemsInLocalStorage = JSON.parse(localStorage.getItem("produit"));
             var newQuantite =
             parseInt(optionsProduit.quantiteProduit) + parseInt(resultFind.quantiteProduit);
             resultFind.quantiteProduit = newQuantite;
-            localStorage.setItem("produit", JSON.stringify(itemsInLocalStorage));
+            localStorage.setItem("produit", JSON.stringify(itemsInLocalStorage)); // Transform JS Object in JSON 
             console.table(itemsInLocalStorage);
             popupConfirmation();
-        // If ordered Item not in Cart ?*/
+   
         } else {
             itemsInLocalStorage.push(optionsProduit);
             localStorage.setItem("produit", JSON.stringify(itemsInLocalStorage));
