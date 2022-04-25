@@ -6,3 +6,7 @@ const orderId = params.get("orderId");
 
       //--Display du Order Number--
 document.getElementById("orderId").textContent = orderId;
+
+
+
+
