@@ -2,7 +2,6 @@
 //-------------------------------------Init LOCAL STORAGE------------------------------------------------
 var itemsInLocalStorage = JSON.parse(localStorage.getItem("produit"));
 console.table(itemsInLocalStorage);
-
 //------------------------------------DISPLAY CART-------------------------------------------------------
 const positionCart = document.querySelector("#cart__items");
 function getCart() {
@@ -78,7 +77,7 @@ function getCart() {
 }
 getCart();
 //--------------------------------------TOTAL ITEMS IN CART----------------------------------------------
-function getTotals(){
+function getTotals() {
     //--Retrieve Total Quantity--
     var articlesQuantity = document.getElementsByClassName('itemQuantity');
     var quantityContent = articlesQuantity.length,
@@ -90,8 +89,7 @@ function getTotals(){
     var totalQuantity = document.getElementById('totalQuantity');
     totalQuantity.innerHTML = totalQt;
    // console.log(totalQt);
-    //--Retrieve Total Price--
-    totalPrice = 0;
+    totalPrice = 0; //--Retrieve Total Price--
 
     for (let i = 0; i < quantityContent; ++i) {
         totalPrice += (articlesQuantity[i].valueAsNumber * itemsInLocalStorage[i].prixProduit);
@@ -105,7 +103,7 @@ getTotals();
 function modify() {
     var modifQuantt = document.querySelectorAll(".itemQuantity");
 
-    for (let k = 0; k < modifQuantt.length; k++){
+    for (let k = 0; k < modifQuantt.length; k++) {
         modifQuantt[k].addEventListener("change" , (event) => {
             event.preventDefault();
             //--Select & Delete Item by Id & Color--
@@ -123,16 +121,14 @@ modify();
 //--------------------------------------------DELETE ITEM------------------------------------------------
 function deleteItem() {
     var deleteBttn = document.querySelectorAll(".deleteItem");
-    for (let j = 0; j < deleteBttn.length; j++){
+    for (let j = 0; j < deleteBttn.length; j++) {
         deleteBttn[j].addEventListener("click" , (e) => {
             e.preventDefault();
-
             //--Select & Delete Item by Id & Color--
             var idDelete = itemsInLocalStorage[j].idProduit;
             var colorDelete = itemsInLocalStorage[j].couleurProduit;
             itemsInLocalStorage = itemsInLocalStorage.filter( el => el.idProduit !== idDelete || el.couleurProduit !== colorDelete );
             localStorage.setItem("produit", JSON.stringify(itemsInLocalStorage));
-              
             //--Pop-up for Deleted Items--
             alert("Attention, ce produit va être supprimé du panier");
             location.reload();
@@ -194,11 +190,9 @@ validForm();
 //------------------------CLIENT INFOS TO LOCAL STORAGE FOR CONFIRMATION---------------------------------
 function Form() {
     const orderButton = document.getElementById("order"); 
-
                 //--Event listening to Cart--
     orderButton.addEventListener("click", (e) => {
         e.preventDefault();
-
                 //--Retrieve Client details form--
         var name = document.getElementById('firstName');
         var familyName = document.getElementById('lastName');
@@ -247,6 +241,8 @@ function Form() {
     })
 }
 Form();
+
+
 
 
 
