@@ -1,5 +1,4 @@
 
-
 //------------------------------A CALL TO API (to Display Items)-----------------------------------------
 displayProducts();
 async function getProducts() { //--GET method to retrieve Data from API--
@@ -37,18 +36,3 @@ const displayShop = parser.parseFromString(productsItems, "text/html");
 productsSection.appendChild(displayShop.body.firstChild);
 }
 }
-
-
- 
-
-  
-
-
-
-
-
- 
-
-  
-
-
