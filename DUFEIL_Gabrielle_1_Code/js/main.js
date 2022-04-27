@@ -1,7 +1,7 @@
 
 //------------------------------A CALL TO API (to Display Items)-----------------------------------------
 displayProducts();
-async function getProducts() { //--GET method to retrieve Data from API--
+async function getProducts() { //--FETCH method to retrieve Data from API--
     return await fetch("http://localhost:3000/api/products")
     .then(function(res) { 
         if (res.ok) { 
