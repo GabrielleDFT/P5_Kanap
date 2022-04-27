@@ -1,5 +1,4 @@
 
-
 var str = window.location.href;
 var url = new URL(str);
 var idProduct = url.searchParams.get("id");
@@ -29,21 +28,21 @@ function getArticle() {
 }
 //---------------------------------DISPLAY ITEM (choose from Home) ON PRODUCT PAGE------------------------
 function getPost(article){
-                    //--Display Item Img--
+            //--Display Item Img--
     var itemImg = document.createElement("img");
     document.querySelector(".item__img").appendChild(itemImg);
     itemImg.src = article.imageUrl;
     itemImg.alt = article.altTxt;
-                    //--Display Item Title/Name-- 
+            //--Display Item Title/Name-- 
     var itemName = document.getElementById('title');
     itemName.innerHTML = article.name;
-                    //--Display Item Price--
+            //--Display Item Price--
     var itemPrice = document.getElementById('price');
     itemPrice.innerHTML = article.price;
-                    //--Display Item Description--
+            //--Display Item Description--
     var itemDescription = document.getElementById('description');
     itemDescription.innerHTML = article.description;
-                    //--Display Color Choice--
+            //--Display Color Choice--
     for (var colors of article.colors){
         console.table(colors);
         var itemColors = document.createElement("option");
@@ -115,6 +114,3 @@ var itemsInLocalStorage = JSON.parse(localStorage.getItem("produit"));
     }}
     });
 }
-
-
-
