@@ -8,5 +8,3 @@ const orderId = params.get("orderId");
 document.getElementById("orderId").textContent = orderId;
 
 
-
-
