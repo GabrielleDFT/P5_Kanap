@@ -1,6 +1,6 @@
 
 //---------------------------------CART CONFIRMATION NUMBER-------------------------------------------
-        //--Récupération Order Id--
+        //--Retrieve Order Id--
 const params = new URL(document.location).searchParams;
 const orderId = params.get("orderId");
 
