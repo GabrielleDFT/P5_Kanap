@@ -89,7 +89,7 @@ function getTotals(){
     }
     var totalQuantity = document.getElementById('totalQuantity');
     totalQuantity.innerHTML = totalQt;
-    console.log(totalQt);
+   // console.log(totalQt);
     //--Retrieve Total Price--
     totalPrice = 0;
 
@@ -98,7 +98,7 @@ function getTotals(){
     }
     var cartTotal = document.getElementById('totalPrice');
     cartTotal.innerHTML = totalPrice;
-    console.log(totalPrice);
+   // console.log(totalPrice);
 }
 getTotals();
 //---------------------------------------MODIFY QUANTITY-------------------------------------------------
@@ -247,5 +247,7 @@ function Form() {
     })
 }
 Form();
+
+
 
 
