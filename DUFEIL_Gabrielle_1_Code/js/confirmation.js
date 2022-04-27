@@ -4,7 +4,7 @@
 const params = new URL(document.location).searchParams;
 const orderId = params.get("orderId");
 
-      //--Display du Order Number--
+      //--Display Order Number--
 document.getElementById("orderId").textContent = orderId;
 
 
