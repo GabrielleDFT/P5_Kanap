@@ -1,10 +1,14 @@
 
 //---------------------------------CART CONFIRMATION NUMBER-------------------------------------------
-        //--Retrieve Order Id--
-const params = new URL(document.location).searchParams;
-const orderId = params.get("orderId");
-
-      //--Display Order Number--
-document.getElementById("orderId").textContent = orderId;
+  //--Fonction to Retrieve Order Id--
+function numberConfirm() {
+      if (localStorage.getItem("orderId") == null) {
+          document.location.href = `index.html`; }
+                  //--Display Order Number--
+      const NumCommande = document.getElementById("orderId");
+      NumCommande.innerText =localStorage.getItem("orderId");
+      localStorage.clear();
+}
+numberConfirm();   
 
 
