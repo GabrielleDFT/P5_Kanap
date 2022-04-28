@@ -137,110 +137,122 @@ function deleteItem() {
 }
 deleteItem();
 //-----------------------------------VALID FORM WITH REGEX-----------------------------------------------
-function validForm() {
-    var form = document.querySelector(".cart__order__form");
-    var emailRegex = new RegExp('^[A-Za-z0-9\-\.]+@([A-Za-z0-9\-]+\.)+[A-Za-z0-9-]{2,4}$');
-    var regex = new RegExp("^[a-zA-Z\-çñàéèêëïîôüù ]{2,}$");
-    var addressRegex = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Z]+)+");
+const form = document.querySelector('.cart__order__form');
+var regex = /^[-'a-zA-ZÀ-ÖØ-öø-ÿ\s]{3,}$/;
+var regexLocal = /^[-'a-zA-Z0-9À-ÖØ-öø-ÿ\s]{3,}$/;
+var emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+var validFirstName = false; 
+var validLastName = false;
+var validAddress = false;
+var validCity = false;
+var validMail = false;
 
-    //--Create Function to Validate First Name, Last Name, Address, City & Email--
-    const validFirstName = function(inputFirstName) {
-        var firstNameErrorMsg = inputFirstName.nextElementSibling;
-        if (regex.test(inputFirstName.value)) {
-            firstNameErrorMsg.innerHTML = ''; } 
-        else {
-            firstNameErrorMsg.innerHTML = 'Veuillez renseigner correctement votre prénom'; }
-    };
-    const validLastName = function(familyName) {
-        var lastNameErrorMsg = familyName.nextElementSibling;
-        if (regex.test(familyName.value)) {
-            lastNameErrorMsg.innerHTML = ''; } 
-        else {
-            lastNameErrorMsg.innerHTML = 'Veuillez renseigner correctement votre nom'; }
-    };
-    const validAddress = function(inputAddress) {
-        var addressErrorMsg = inputAddress.nextElementSibling;
-        if (addressRegex.test(inputAddress.value)) {
-            addressErrorMsg.innerHTML = ''; } 
-        else {
-            addressErrorMsg.innerHTML = 'Veuillez renseigner une adresse postale valide'; }
-    };
-    const validCity = function(cityPlace) {
-        var cityErrorMsg = cityPlace.nextElementSibling;
-        if (regex.test(cityPlace.value)) {
-            cityErrorMsg.innerHTML = ''; } 
-        else {
-            cityErrorMsg.innerHTML = 'Veuillez renseigner un nom de votre ville valide'; }
-    };
-    const validEmail = function(inputEmail) {
-        var emailErrorMsg = inputEmail.nextElementSibling;
-        if (emailRegex.test(inputEmail.value)) {
-            emailErrorMsg.innerHTML = ''; } 
-            else {
-            emailErrorMsg.innerHTML = 'Veuillez renseigner une adresse email valide'; }
-    };
-        //--Event listening to First Name, Last Name, Address, City & Email---
-    form.firstName.addEventListener('change', function() { validFirstName(this); });
-    form.lastName.addEventListener('change', function() { validLastName(this); });
-    form.address.addEventListener('change', function() { validAddress(this);  });
-    form.city.addEventListener('change', function() { validCity(this); });
-    form.email.addEventListener('change', function() { validEmail(this); });
-}
-validForm();
+//--Function to Validate First Name, Last Name, Address, City & Email--
+form.firstName.addEventListener('input', function() {
+  let firstNameTest = regex.test(this.value);
+  if(firstNameTest) {
+    validFirstName = true; 
+    this.nextElementSibling.innerHTML = "";
+  } 
+  else {
+    validFirstName = false; 
+    this.nextElementSibling.innerHTML = "Veuillez renseigner correctement votre prénom (lettres et au moins 3 caractères)";
+  }
+});
+form.lastName.addEventListener('input', function() {
+  let lastNameTest = regex.test(this.value);
+  if(lastNameTest) {
+    validLastName = true; 
+    this.nextElementSibling.innerHTML = "";
+  } 
+  else {
+    validLastName = false; 
+    this.nextElementSibling.innerHTML = "Veuillez renseigner correctement votre nom (avec lettres et au moins 3 caractères)";
+  }
+});
+form.address.addEventListener('input', function() {
+  let addressTest = regexLocal.test(this.value);
+  if(addressTest) {
+    validAddress = true; 
+    this.nextElementSibling.innerHTML = "";
+  }
+  else {
+    validAddress = false; 
+    this.nextElementSibling.innerHTML = "Veuillez renseigner une adresse postale valide";
+  }
+});
+form.city.addEventListener('input', function() {
+  let cityTest = regexLocal.test(this.value);
+  if(cityTest) {
+    validCity = true; 
+    this.nextElementSibling.innerHTML = "";
+  }
+  else {
+    validCity = false; 
+    this.nextElementSibling.innerHTML = "Veuillez renseigner un nom de ville valide";
+  }
+});
+form.email.addEventListener('input', function() {
+  let emailTest = emailRegex.test(this.value);
+  if(emailTest) {
+    validMail = true; 
+    this.nextElementSibling.innerHTML = "";
+  }
+  else {
+    validMail = false; 
+    this.nextElementSibling.innerHTML = "Veuillez renseigner une adresse email valide";
+  }
+});
+        //--Function to valid form--
+function verifForm() {
+  if (
+    validFirstName &&
+    validLastName &&
+    validAddress &&
+    validCity &&
+    validMail
+  ) {
+    return true;
+  } 
+  else {
+    alert('Merci de renseigner correctement vos coordonnées pour passer la commande');
+    return false;
+  }
+};
 //------------------------CLIENT INFOS TO LOCAL STORAGE FOR CONFIRMATION---------------------------------
-function Form() {
-    const orderButton = document.getElementById("order"); 
-                //--Event listening to Cart--
-    orderButton.addEventListener("click", (e) => {
-        e.preventDefault();
-                //--Retrieve Client details form--
-        var name = document.getElementById('firstName');
-        var familyName = document.getElementById('lastName');
-        var adresse = document.getElementById('address');
-        var cityPlace = document.getElementById('city');
-        var mail = document.getElementById('email');
- 
-                //--Create an Array to Local Storage--
-        var idProducts = [];  
-        for (var i = 0; i<itemsInLocalStorage.length;i++) {
-            idProducts.push(itemsInLocalStorage[i].idProduit); }
-        console.log(idProducts);
-
-                //--Create an Object to Retrieve Data User--
-        const order = {  
-            contact : {
-                firstName: name.value,
-                lastName: familyName.value,
-                address: adresse.value,
-                city: cityPlace.value,
-                email: mail.value,
-            },
-            products: idProducts,
-        }; 
-        const post = {
-            method: 'POST',
-            body: JSON.stringify(order),
-            headers: {
-                Accept: 'application/json', 
-                "Content-Type": "application/json",
-            },
-        };
-                //--Call to API "order" to send Object--
-        fetch("http://localhost:3000/api/products/order", post)
-            .then((res) => {
-                return res.json();
-            })
-            .then((confirm) => {
-                document.location.href = "./confirmation.html?orderId=" + confirm.orderId;
-                localStorage.clear();
-            })
-            .catch((err) => {
-                alert ("Problème avec fetch" + err);
-                //console.log("une erreur est survenue");
-            });
-    })
-}
-Form();
+//--Create an Object to Retrieve Data User--
+var order = {
+  contact: {
+    firstName: firstName,
+    lastName: lastName,
+    address: address,
+    city: city,
+    email: email,
+    },
+  products: []
+}; 
+const orderButton  = document.getElementById('order');
+          //--Event listening to Cart--
+orderButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (verifForm()){    
+    const post = { //--Post method--
+      method: 'POST',  
+      headers: {
+        'content-Type': 'application/json'},
+      body: JSON.stringify(order),
+    }; 
+    console.log(post);
+            //--Call to API "order" to send Object--
+    fetch("http://localhost:3000/api/products/order", post)       
+      .then((res) => res.json())
+      .then(data => {
+      console.log(data); 
+      localStorage.setItem("orderId", data.orderId);
+      document.location.href = `confirmation.html`;
+    });   
+  }
+});
 
 
 
